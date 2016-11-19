@@ -85,6 +85,7 @@ public class MainActivity extends AppCompatActivity
     private static final int REQUEST_PICK_IMAGE = 1;
     private String mUsername;
     private String mPhotoUrl;
+    private String mNickname;
     private SharedPreferences mSharedPreferences;
     private GoogleApiClient mGoogleApiClient;
 
@@ -133,6 +134,7 @@ public class MainActivity extends AppCompatActivity
             return;
         } else {
             mUsername = mUser.getDisplayName();
+            mNickname = "nickkyy";
             if (mUser.getPhotoUrl() != null) {
                 mPhotoUrl = mUser.getPhotoUrl().toString();
             }
@@ -185,11 +187,17 @@ public class MainActivity extends AppCompatActivity
             @Override
             public void onClick(View view) {
                 // Send messages on click.
-                mMessageRecyclerView.scrollToPosition(0);
+                String msg = mMessageEditText.getText().toString();
+
+                if(msg.equals("fuck")) {
+                    msg = "****";
+                }
+
                 ChatMessage chatMessage = new
-                        ChatMessage(mMessageEditText.getText().toString(),
+                        ChatMessage(msg,
                         mUsername,
-                        mPhotoUrl);
+                        mPhotoUrl,
+                        mNickname);
                 MessageUtil.send(chatMessage);
                 mMessageEditText.setText("");
             }

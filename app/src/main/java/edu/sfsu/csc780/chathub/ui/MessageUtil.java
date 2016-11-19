@@ -90,7 +90,7 @@ public class MessageUtil {
                                               ChatMessage chatMessage, int position) {
                 sAdapterListener.onLoadComplete();
                 viewHolder.messageTextView.setText(chatMessage.getText());
-                viewHolder.messengerTextView.setText(chatMessage.getName());
+                viewHolder.messengerTextView.setText(chatMessage.getNickname());
                 if (chatMessage.getPhotoUrl() == null) {
                     viewHolder.messengerImageView
                             .setImageDrawable(ContextCompat
