@@ -70,10 +70,13 @@ import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import edu.sfsu.csc780.chathub.R;
 import edu.sfsu.csc780.chathub.model.ChatMessage;
 
+import static android.R.id.input;
 import static android.app.Activity.*;
 import static android.speech.RecognizerIntent.LANGUAGE_MODEL_FREE_FORM;
 
@@ -198,15 +201,14 @@ public class MainActivity extends AppCompatActivity
         mSendButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                // Send messages on click.
-                String msg = mMessageEditText.getText().toString();
 
-                if(msg.equals("fuck")) {
-                    msg = "****";
-                }
+                //Bad word filter using replaceAll function
+                String input = mMessageEditText.getText().toString();
+                String badWord = "fuck";
+                String filteredText= input.replaceAll("(?i)" + badWord, badWord.replaceAll("fuck", "****"));
 
                 ChatMessage chatMessage = new
-                        ChatMessage(msg,
+                        ChatMessage(filteredText,
                         mUsername,
                         mPhotoUrl,
                         mNickname);
