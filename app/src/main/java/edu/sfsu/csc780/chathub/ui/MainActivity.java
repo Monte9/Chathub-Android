@@ -25,6 +25,7 @@ import android.os.Bundle;
 import android.os.Environment;
 import android.preference.PreferenceManager;
 import android.provider.MediaStore;
+import android.speech.RecognizerIntent;
 import android.support.annotation.NonNull;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.DialogFragment;
@@ -60,15 +61,21 @@ import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
 
+import org.w3c.dom.Text;
+
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Date;
 
 import edu.sfsu.csc780.chathub.R;
 import edu.sfsu.csc780.chathub.model.ChatMessage;
+
+import static android.app.Activity.*;
+import static android.speech.RecognizerIntent.LANGUAGE_MODEL_FREE_FORM;
 
 public class MainActivity extends AppCompatActivity
         implements GoogleApiClient.OnConnectionFailedListener,
@@ -77,8 +84,9 @@ public class MainActivity extends AppCompatActivity
     private static final String TAG = "MainActivity";
     public static final String MESSAGES_CHILD = "messages";
     private static final int REQUEST_INVITE = 1;
-    private static final int REQUEST_TAKE_PHOTO = 3;
     public static final int REQUEST_PREFERENCES = 2;
+    private static final int REQUEST_TAKE_PHOTO = 3;
+    private static final int REQUEST_RECORD_AUDIO = 4;
     public static final int MSG_LENGTH_LIMIT = 64;
     private static final double MAX_LINEAR_DIMENSION = 500.0;
     public static final String ANONYMOUS = "anonymous";
@@ -101,10 +109,14 @@ public class MainActivity extends AppCompatActivity
 
     private FirebaseRecyclerAdapter<ChatMessage, MessageUtil.MessageViewHolder>
             mFirebaseAdapter;
+
     private ImageButton mImageButton;
     private ImageButton mPhotoButton;
-    private int mSavedTheme;
     private ImageButton mLocationButton;
+    private ImageButton mMicrophoneButton;
+
+    private int mSavedTheme;
+
     private View.OnClickListener mImageClickListener = new View.OnClickListener() {
         @Override
         public void onClick(View v) {
@@ -227,6 +239,14 @@ public class MainActivity extends AppCompatActivity
                 loadMap();
             }
         });
+
+        mMicrophoneButton = (ImageButton) findViewById(R.id.microphoneButton);
+        mMicrophoneButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                recordAudio();
+            }
+        });
     }
 
     private void dispatchTakePhotoIntent() {
@@ -322,12 +342,27 @@ public class MainActivity extends AppCompatActivity
         startActivityForResult(intent, REQUEST_PICK_IMAGE);
     }
 
+    private void recordAudio() {
+        // ACTION_RECOGNIZE_SPEECH is the intent to recognize speech input
+        Intent intent = new Intent(RecognizerIntent.ACTION_RECOGNIZE_SPEECH);
+
+        //LANGUAGE_MODEL_FREE_FORM gets speech input in free form english
+        intent.putExtra(RecognizerIntent.EXTRA_LANGUAGE_MODEL,
+                LANGUAGE_MODEL_FREE_FORM);
+
+        //EXTRA_PROMPT prompts the user with the message to start speaking
+        intent.putExtra(RecognizerIntent.EXTRA_PROMPT,
+                "Start speaking now...");
+
+        startActivityForResult(intent, REQUEST_RECORD_AUDIO);
+    }
+
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
         Log.d(TAG, "onActivityResult: request=" + requestCode + ", result=" + resultCode);
 
-        if (requestCode == REQUEST_PICK_IMAGE && resultCode == Activity.RESULT_OK) {
+        if (requestCode == REQUEST_PICK_IMAGE && resultCode == RESULT_OK) {
             // Process selected image here
             // The document selected by the user won't be returned in the intent.
             // Instead, a URI to that document will be contained in the return intent
@@ -357,6 +392,16 @@ public class MainActivity extends AppCompatActivity
                 createImageMessage(savePhotoImage(imageBitmap));
             } else {
                 Log.e(TAG, "Cannot get photo URI after taking photo");
+            }
+        } else if (requestCode == REQUEST_RECORD_AUDIO && resultCode == RESULT_OK) {
+
+            if (data != null && data.getExtras() != null) {
+                ArrayList<String> result = data
+                        .getStringArrayListExtra(RecognizerIntent.EXTRA_RESULTS);
+                mMessageEditText.setText(result.get(0));
+                Log.e(TAG, "Processed speech to text.");
+            } else {
+                Log.e(TAG, "Unable to process speech to text. Please try again.");
             }
         } else if (requestCode == REQUEST_PREFERENCES) {
             if (DesignUtils.getPreferredTheme(this) != mSavedTheme) {
