@@ -134,7 +134,7 @@ public class MainActivity extends AppCompatActivity
             return;
         } else {
             mUsername = mUser.getDisplayName();
-            mNickname = "nickkyy";
+            mNickname = "Default Nickname";
             if (mUser.getPhotoUrl() != null) {
                 mPhotoUrl = mUser.getPhotoUrl().toString();
             }
@@ -387,7 +387,7 @@ public class MainActivity extends AppCompatActivity
                 ChatMessage chatMessage = new
                         ChatMessage(mMessageEditText.getText().toString(),
                         mUsername,
-                        mPhotoUrl, imageReference.toString());
+                        mPhotoUrl, mNickname, imageReference.toString());
                 MessageUtil.send(chatMessage);
                 mMessageEditText.setText("");
             }
