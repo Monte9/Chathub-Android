@@ -16,10 +16,17 @@
 package edu.sfsu.csc780.chathub.ui;
 
 import android.app.Activity;
+import android.app.AlertDialog;
+import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
+import android.hardware.Sensor;
+import android.hardware.SensorEvent;
+import android.hardware.SensorEventListener;
+import android.hardware.SensorManager;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Environment;
@@ -82,7 +89,7 @@ import static android.speech.RecognizerIntent.LANGUAGE_MODEL_FREE_FORM;
 
 public class MainActivity extends AppCompatActivity
         implements GoogleApiClient.OnConnectionFailedListener,
-        MessageUtil.MessageLoadListener {
+        MessageUtil.MessageLoadListener, SensorEventListener {
 
     private static final String TAG = "MainActivity";
     public static final String MESSAGES_CHILD = "messages";
@@ -105,6 +112,8 @@ public class MainActivity extends AppCompatActivity
     private LinearLayoutManager mLinearLayoutManager;
     private ProgressBar mProgressBar;
     private EditText mMessageEditText;
+    private SensorManager mSensorManager;
+    private Sensor mSensor;
 
     // Firebase instance variables
     private FirebaseAuth mAuth;
@@ -197,6 +206,11 @@ public class MainActivity extends AppCompatActivity
             }
         });
 
+        mSensorManager = (SensorManager) getSystemService(Context.SENSOR_SERVICE);
+        mSensor = mSensorManager.getDefaultSensor(Sensor.TYPE_ACCELEROMETER);
+        mSensorManager.registerListener(this, mSensor, SensorManager.SENSOR_DELAY_NORMAL);
+
+
         mSendButton = (FloatingActionButton) findViewById(R.id.sendButton);
         mSendButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -249,6 +263,47 @@ public class MainActivity extends AppCompatActivity
                 recordAudio();
             }
         });
+    }
+
+    private AlertDialog display() {
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        builder.setMessage("Delete text field")
+                .setTitle("WARNING!")
+                .setPositiveButton("OK", new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int id) {
+                        mMessageEditText.setText("");
+                        dialog.cancel();
+                        onSensorListener();
+                    }
+                })
+                .setNegativeButton("CANCEL", new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int id) {
+                        dialog.cancel();
+                        onSensorListener();
+                    }
+                });
+        AlertDialog dialog = builder.create();
+        dialog.setCanceledOnTouchOutside(false);
+        dialog.setCancelable(false);
+
+        return dialog;
+    }
+
+    public void onSensorChanged(SensorEvent event) {
+        if(!(mMessageEditText.getText().toString().isEmpty())) {
+            if(event.values[0] > 30 || event.values[0] < -30) {
+                mSensorManager.unregisterListener(this);
+                display().show();
+            }
+        }
+    }
+
+    public void onAccuracyChanged(Sensor sensor, int accuracy) {
+
+    }
+
+    private void onSensorListener() {
+        mSensorManager.registerListener(this, mSensor, SensorManager.SENSOR_DELAY_NORMAL);
     }
 
     private void dispatchTakePhotoIntent() {
