@@ -15,7 +15,6 @@
  */
 package edu.sfsu.csc780.chathub.ui;
 
-import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
@@ -68,8 +67,6 @@ import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
 
-import org.w3c.dom.Text;
-
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
@@ -77,14 +74,12 @@ import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 
 import edu.sfsu.csc780.chathub.R;
 import edu.sfsu.csc780.chathub.model.ChatMessage;
 
+import static android.R.attr.y;
 import static android.R.id.input;
-import static android.app.Activity.*;
 import static android.speech.RecognizerIntent.LANGUAGE_MODEL_FREE_FORM;
 
 public class MainActivity extends AppCompatActivity
@@ -218,8 +213,13 @@ public class MainActivity extends AppCompatActivity
 
                 //Bad word filter using replaceAll function
                 String input = mMessageEditText.getText().toString();
-                String badWord = "fuck";
-                String filteredText= input.replaceAll("(?i)" + badWord, badWord.replaceAll("fuck", "****"));
+                String[] badWords = {"fuck", "bitch", "sucker", "ass", "pussy"};
+
+                String filteredText = input;
+
+                for(String badword : badWords) {
+                    filteredText = filteredText.replaceAll("(?i)" + badword, new String(new char[badword.length()]).replace("\0", "*"));
+                }
 
                 ChatMessage chatMessage = new
                         ChatMessage(filteredText,
