@@ -23,6 +23,7 @@ public class ChatMessage {
     private String name;
     private String photoUrl;
     private String nickname;
+    private User user;
 
     public long getTimestamp() {
         return timestamp;
@@ -40,16 +41,14 @@ public class ChatMessage {
     public ChatMessage() {
     }
 
-    public ChatMessage(String text, String name, String photoUrl, String nickname) {
+    public ChatMessage(String text, User user) {
         this.text = text;
-        this.name = name;
-        this.photoUrl = photoUrl;
         this.timestamp = new Date().getTime();
-        this.nickname = nickname;
+        this.user = user;
     }
 
-    public ChatMessage(String text, String name, String photoUrl,  String nickname, String imageUrl) {
-        this(text, name, photoUrl, nickname);
+    public ChatMessage(String text, User user, String imageUrl) {
+        this(text, user);
         this.imageUrl = imageUrl;
     }
 
@@ -59,6 +58,14 @@ public class ChatMessage {
 
     public void setText(String text) {
         this.text = text;
+    }
+
+    public User getUser() {
+        return user;
+    }
+
+    public void setUser(User user) {
+        this.user = user;
     }
 
     public String getName() {

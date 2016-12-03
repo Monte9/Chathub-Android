@@ -77,6 +77,7 @@ import java.util.Date;
 
 import edu.sfsu.csc780.chathub.R;
 import edu.sfsu.csc780.chathub.model.ChatMessage;
+import edu.sfsu.csc780.chathub.model.User;
 
 import static android.R.attr.y;
 import static android.R.id.input;
@@ -97,8 +98,8 @@ public class MainActivity extends AppCompatActivity
     public static final String ANONYMOUS = "anonymous";
     private static final int REQUEST_PICK_IMAGE = 1;
     private String mUsername;
+    private User mUserModel;
     private String mPhotoUrl;
-    private String mNickname;
     private SharedPreferences mSharedPreferences;
     private GoogleApiClient mGoogleApiClient;
 
@@ -152,11 +153,18 @@ public class MainActivity extends AppCompatActivity
             finish();
             return;
         } else {
-            mUsername = mUser.getDisplayName();
-            mNickname = "Default Nickname";
             if (mUser.getPhotoUrl() != null) {
                 mPhotoUrl = mUser.getPhotoUrl().toString();
+            } else {
+                mPhotoUrl = "";
             }
+
+            mUserModel = new
+                    User(mUser.getDisplayName(), mUser.getEmail(), mPhotoUrl, "default_nickname", "default_phone");
+
+            System.out.println("BOOMM");
+            System.out.println(mUserModel.getEmail());
+            System.out.println("SONN");
         }
 
         mGoogleApiClient = new GoogleApiClient.Builder(this)
@@ -221,11 +229,19 @@ public class MainActivity extends AppCompatActivity
                     filteredText = filteredText.replaceAll("(?i)" + badword, new String(new char[badword.length()]).replace("\0", "*"));
                 }
 
+                System.out.println("BOOMM1233444");
+                System.out.println(mUserModel.getProfileImageUrl());
+                System.out.println("SON999999N");
+
                 ChatMessage chatMessage = new
                         ChatMessage(filteredText,
-                        mUsername,
-                        mPhotoUrl,
-                        mNickname);
+                        mUserModel);
+
+                System.out.println("999");
+                System.out.println(chatMessage.getUser());
+                System.out.println(chatMessage.getText());
+                System.out.println("kkk");
+
                 MessageUtil.send(chatMessage);
                 mMessageEditText.setText("");
             }
@@ -488,8 +504,7 @@ public class MainActivity extends AppCompatActivity
             public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
                 ChatMessage chatMessage = new
                         ChatMessage(mMessageEditText.getText().toString(),
-                        mUsername,
-                        mPhotoUrl, mNickname, imageReference.toString());
+                        mUserModel, imageReference.toString());
                 MessageUtil.send(chatMessage);
                 mMessageEditText.setText("");
             }

@@ -90,8 +90,8 @@ public class MessageUtil {
                                               ChatMessage chatMessage, int position) {
                 sAdapterListener.onLoadComplete();
                 viewHolder.messageTextView.setText(chatMessage.getText());
-                viewHolder.messengerTextView.setText(chatMessage.getNickname());
-                if (chatMessage.getPhotoUrl() == null) {
+                viewHolder.messengerTextView.setText(chatMessage.getUser().getNickname());
+                if (chatMessage.getUser().getProfileImageUrl() == null) {
                     viewHolder.messengerImageView
                             .setImageDrawable(ContextCompat
                                     .getDrawable(activity,
@@ -116,7 +116,7 @@ public class MessageUtil {
                         }
                     };
                     Glide.with(activity)
-                            .load(chatMessage.getPhotoUrl())
+                            .load(chatMessage.getUser().getProfileImageUrl())
                             .asBitmap()
                             .into(target);
                 }
