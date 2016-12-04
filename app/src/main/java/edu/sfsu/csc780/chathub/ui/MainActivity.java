@@ -122,10 +122,10 @@ public class MainActivity extends AppCompatActivity
     private FirebaseRecyclerAdapter<ChatMessage, MessageUtil.MessageViewHolder>
             mFirebaseAdapter;
 
-    private ImageButton mImageButton;
+    /*private ImageButton mImageButton;
     private ImageButton mPhotoButton;
     private ImageButton mLocationButton;
-    private ImageButton mMicrophoneButton;
+    private ImageButton mMicrophoneButton;*/
 
     private int mSavedTheme;
 
@@ -700,12 +700,14 @@ public class MainActivity extends AppCompatActivity
         });
 
         String[] drawerListItem = {"Share Image", "Camera", "Location", "Microphone"};
+        Integer[] drawerImageItem = {R.drawable.ic_image_black_24px, R.drawable.ic_camera_alt_black_24px, R.drawable.ic_my_location_black_24px, R.drawable.ic_microphone_black};
         mDrawerLayout = (DrawerLayout) findViewById(R.id.drawer_layout);
         mDrawerList = (ListView) findViewById(R.id.left_drawer);
 
+        CustomListAdapter customAdapter = new CustomListAdapter(this, drawerListItem, drawerImageItem);
+
         // Set the adapter for the list view
-        mDrawerList.setAdapter(new ArrayAdapter<String>(this,
-                R.layout.drawer_list_item, drawerListItem));
+        mDrawerList.setAdapter(customAdapter);
         // Set the list's click listener
         mDrawerList.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
@@ -716,7 +718,7 @@ public class MainActivity extends AppCompatActivity
 
 
 
-        mImageButton = (ImageButton) findViewById(R.id.shareImageButton);
+        /*mImageButton = (ImageButton) findViewById(R.id.shareImageButton);
         mImageButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -746,7 +748,7 @@ public class MainActivity extends AppCompatActivity
             public void onClick(View v) {
                 recordAudio();
             }
-        });
+        });*/
     }
 
     private void selectedItem(int position) {
@@ -1070,7 +1072,7 @@ public class MainActivity extends AppCompatActivity
             @Override
             public void onLoadFinished(final Loader<Bitmap> loader, final Bitmap result) {
                 mProgressBar.setVisibility(ProgressBar.INVISIBLE);
-                mLocationButton.setEnabled(true);
+                //mLocationButton.setEnabled(true);
 
                 if (result == null) return;
                 // Resize if too big for messaging
@@ -1092,7 +1094,7 @@ public class MainActivity extends AppCompatActivity
         });
 
         mProgressBar.setVisibility(ProgressBar.VISIBLE);
-        mLocationButton.setEnabled(false);
+        //mLocationButton.setEnabled(false);
         loader.forceLoad();
     }
 
