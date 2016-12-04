@@ -38,6 +38,7 @@ import android.support.v4.app.DialogFragment;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v4.app.LoaderManager;
 import android.support.v4.content.Loader;
+import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -49,9 +50,12 @@ import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
 import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.ImageView;
+import android.widget.ListView;
 import android.widget.ProgressBar;
 import android.widget.Toast;
 
@@ -125,6 +129,8 @@ public class MainActivity extends AppCompatActivity
 
     private int mSavedTheme;
 
+    private DrawerLayout mDrawerLayout;
+    private ListView mDrawerList;
     private String[] badWords = {"a55",
             "anal",
             "anus",
@@ -338,7 +344,6 @@ public class MainActivity extends AppCompatActivity
             "goddamn",
             "goddamned",
             "hardcoresex",
-            "hell",
             "heshe",
             "hoar",
             "hoare",
@@ -694,6 +699,22 @@ public class MainActivity extends AppCompatActivity
             }
         });
 
+        String[] drawerListItem = {"Share Image", "Camera", "Location", "Microphone"};
+        mDrawerLayout = (DrawerLayout) findViewById(R.id.drawer_layout);
+        mDrawerList = (ListView) findViewById(R.id.left_drawer);
+
+        // Set the adapter for the list view
+        mDrawerList.setAdapter(new ArrayAdapter<String>(this,
+                R.layout.drawer_list_item, drawerListItem));
+        // Set the list's click listener
+        mDrawerList.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                selectedItem(position);
+            }
+        });
+
+
 
         mImageButton = (ImageButton) findViewById(R.id.shareImageButton);
         mImageButton.setOnClickListener(new View.OnClickListener() {
@@ -726,6 +747,22 @@ public class MainActivity extends AppCompatActivity
                 recordAudio();
             }
         });
+    }
+
+    private void selectedItem(int position) {
+        if (position == 0) {
+            pickImage();
+            mDrawerLayout.closeDrawers();
+        } else if (position == 1) {
+            dispatchTakePhotoIntent();
+            mDrawerLayout.closeDrawers();
+        } else if (position == 2) {
+            loadMap();
+            mDrawerLayout.closeDrawers();
+        } else if (position == 3) {
+            recordAudio();
+            mDrawerLayout.closeDrawers();
+        }
     }
 
     private AlertDialog display() {
