@@ -83,8 +83,10 @@ import edu.sfsu.csc780.chathub.R;
 import edu.sfsu.csc780.chathub.model.ChatMessage;
 import edu.sfsu.csc780.chathub.model.User;
 
+import static android.R.attr.data;
 import static android.R.attr.y;
 import static android.R.id.input;
+import static android.provider.AlarmClock.EXTRA_MESSAGE;
 import static android.speech.RecognizerIntent.LANGUAGE_MODEL_FREE_FORM;
 
 public class MainActivity extends AppCompatActivity
@@ -97,6 +99,7 @@ public class MainActivity extends AppCompatActivity
     public static final int REQUEST_PREFERENCES = 2;
     private static final int REQUEST_TAKE_PHOTO = 3;
     private static final int REQUEST_RECORD_AUDIO = 4;
+    private static final int REQUEST_PROFILE = 5;
     public static final int MSG_LENGTH_LIMIT = 64;
     private static final double MAX_LINEAR_DIMENSION = 500.0;
     public static final String ANONYMOUS = "anonymous";
@@ -731,7 +734,7 @@ public class MainActivity extends AppCompatActivity
             recordAudio();
             mDrawerLayout.closeDrawers();
         } else if (position == 4) {
-            //recordAudio();
+            showProfileActivity();
             System.out.println("Show profile here");
             mDrawerLayout.closeDrawers();
         }
@@ -884,6 +887,11 @@ public class MainActivity extends AppCompatActivity
                 "Start speaking now...");
 
         startActivityForResult(intent, REQUEST_RECORD_AUDIO);
+    }
+
+    private void showProfileActivity() {
+        Intent intent = new Intent(this, ProfileActivity.class);
+        startActivityForResult(intent, REQUEST_PROFILE);
     }
 
     @Override
