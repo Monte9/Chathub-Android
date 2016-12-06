@@ -35,6 +35,7 @@ import android.speech.RecognizerIntent;
 import android.support.annotation.NonNull;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.DialogFragment;
+import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v4.app.LoaderManager;
 import android.support.v4.content.Loader;
@@ -699,8 +700,8 @@ public class MainActivity extends AppCompatActivity
             }
         });
 
-        String[] drawerListItem = {"Share Image", "Camera", "Location", "Microphone"};
-        Integer[] drawerImageItem = {R.drawable.ic_image_black_24px, R.drawable.ic_camera_alt_black_24px, R.drawable.ic_my_location_black_24px, R.drawable.ic_microphone_black};
+        String[] drawerListItem = {"Profile","Share Image", "Camera", "Location", "Microphone"};
+        Integer[] drawerImageItem = {R.drawable.ic_profile_white,R.drawable.ic_image_share_white, R.drawable.ic_camera_white, R.drawable.ic_location_white, R.drawable.ic_microphone_white};
         mDrawerLayout = (DrawerLayout) findViewById(R.id.drawer_layout);
         mDrawerList = (ListView) findViewById(R.id.left_drawer);
 
@@ -752,16 +753,27 @@ public class MainActivity extends AppCompatActivity
     }
 
     private void selectedItem(int position) {
+        Fragment newFragment;
+        FragmentTransaction fragmentTransaction = getSupportFragmentManager().beginTransaction();
+
         if (position == 0) {
-            pickImage();
+            /*newFragment = new EditProfileFragment();
+            fragmentTransaction.replace(R.id.content_frame, newFragment);
+            fragmentTransaction.commit();*/
+            Intent intent = new Intent(this, EditProfileFragment.class);
+            startActivity(intent);
+
             mDrawerLayout.closeDrawers();
         } else if (position == 1) {
-            dispatchTakePhotoIntent();
+            pickImage();
             mDrawerLayout.closeDrawers();
         } else if (position == 2) {
-            loadMap();
+            dispatchTakePhotoIntent();
             mDrawerLayout.closeDrawers();
         } else if (position == 3) {
+            loadMap();
+            mDrawerLayout.closeDrawers();
+        } else if (position == 4) {
             recordAudio();
             mDrawerLayout.closeDrawers();
         }
