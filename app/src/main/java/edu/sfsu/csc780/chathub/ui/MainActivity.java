@@ -690,8 +690,8 @@ public class MainActivity extends AppCompatActivity
             }
         });
 
-        String[] drawerListItem = {"Profile","Share Image", "Camera", "Location", "Microphone"};
-        Integer[] drawerImageItem = {R.drawable.ic_profile_white,R.drawable.ic_image_share_white, R.drawable.ic_camera_white, R.drawable.ic_location_white, R.drawable.ic_microphone_white};
+        String[] drawerListItem = {"Profile","Share Image", "Camera", "Location", "Microphone", "Preferences", "Log Out"};
+        Integer[] drawerImageItem = {R.drawable.ic_profile_white, R.drawable.ic_image_share_white, R.drawable.ic_camera_white, R.drawable.ic_location_white, R.drawable.ic_microphone_white, R.drawable.ic_image_share_white, R.drawable.ic_profile_white};
         mDrawerLayout = (DrawerLayout) findViewById(R.id.drawer_layout);
         mDrawerList = (ListView) findViewById(R.id.left_drawer);
 
@@ -724,6 +724,12 @@ public class MainActivity extends AppCompatActivity
             mDrawerLayout.closeDrawers();
         } else if (position == 4) {
             recordAudio();
+            mDrawerLayout.closeDrawers();
+        } else if (position == 5) {
+            showPreferences();
+            mDrawerLayout.closeDrawers();
+        } else if (position == 6) {
+            logoutUser();
             mDrawerLayout.closeDrawers();
         }
     }
@@ -819,24 +825,6 @@ public class MainActivity extends AppCompatActivity
     }
 
     @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        switch (item.getItemId()) {
-            case R.id.sign_out_menu:
-                mAuth.signOut();
-                Auth.GoogleSignInApi.signOut(mGoogleApiClient);
-                mUsername = ANONYMOUS;
-                startActivity(new Intent(this, SignInActivity.class));
-                return true;
-            case R.id.preferences_menu:
-                mSavedTheme = DesignUtils.getPreferredTheme(this);
-                Intent i = new Intent(this, PreferencesActivity.class);
-                startActivityForResult(i, REQUEST_PREFERENCES);
-            default:
-                return super.onOptionsItemSelected(item);
-        }
-    }
-
-    @Override
     public void onConnectionFailed(@NonNull ConnectionResult connectionResult) {
         // An unresolvable error has occurred and Google APIs (including Sign-In) will not
         // be available.
@@ -881,6 +869,19 @@ public class MainActivity extends AppCompatActivity
         Intent intent = new Intent(this, EditProfileFragment.class);
         intent.putExtra(EXTRA_USER, (Parcelable)mUserModel);
         startActivityForResult(intent, REQUEST_PROFILE);
+    }
+
+    private void logoutUser() {
+        mAuth.signOut();
+        Auth.GoogleSignInApi.signOut(mGoogleApiClient);
+        mUsername = ANONYMOUS;
+        startActivity(new Intent(this, SignInActivity.class));
+    }
+
+    private void showPreferences() {
+        mSavedTheme = DesignUtils.getPreferredTheme(this);
+        Intent i = new Intent(this, PreferencesActivity.class);
+        startActivityForResult(i, REQUEST_PREFERENCES);
     }
 
     @Override
