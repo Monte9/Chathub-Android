@@ -699,8 +699,8 @@ public class MainActivity extends AppCompatActivity
             }
         });
 
-        String[] drawerListItem = {"Share Image", "Camera", "Location", "Microphone"};
-        Integer[] drawerImageItem = {R.drawable.ic_image_black_24px, R.drawable.ic_camera_alt_black_24px, R.drawable.ic_my_location_black_24px, R.drawable.ic_microphone_black};
+        String[] drawerListItem = {"Share Image", "Camera", "Location", "Microphone", "Profile"};
+        Integer[] drawerImageItem = {R.drawable.ic_image_black_24px, R.drawable.ic_camera_alt_black_24px, R.drawable.ic_my_location_black_24px, R.drawable.ic_keyboard_voice_black_24dp, R.drawable.ic_person_black_24dp};
         mDrawerLayout = (DrawerLayout) findViewById(R.id.drawer_layout);
         mDrawerList = (ListView) findViewById(R.id.left_drawer);
 
@@ -715,40 +715,6 @@ public class MainActivity extends AppCompatActivity
                 selectedItem(position);
             }
         });
-
-
-
-        /*mImageButton = (ImageButton) findViewById(R.id.shareImageButton);
-        mImageButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                pickImage();
-            }
-        });
-
-        mPhotoButton = (ImageButton) findViewById(R.id.cameraButton);
-        mPhotoButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                dispatchTakePhotoIntent();
-            }
-        });
-
-        mLocationButton = (ImageButton) findViewById(R.id.locationButton);
-        mLocationButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                loadMap();
-            }
-        });
-
-        mMicrophoneButton = (ImageButton) findViewById(R.id.microphoneButton);
-        mMicrophoneButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                recordAudio();
-            }
-        });*/
     }
 
     private void selectedItem(int position) {
@@ -763,6 +729,10 @@ public class MainActivity extends AppCompatActivity
             mDrawerLayout.closeDrawers();
         } else if (position == 3) {
             recordAudio();
+            mDrawerLayout.closeDrawers();
+        } else if (position == 4) {
+            //recordAudio();
+            System.out.println("Show profile here");
             mDrawerLayout.closeDrawers();
         }
     }

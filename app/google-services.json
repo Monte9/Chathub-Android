@@ -1,35 +1,35 @@
 {
   "project_info": {
-    "project_number": "594555583715",
-    "firebase_url": "https://chathub-project-8e26c.firebaseio.com",
-    "project_id": "chathub-project-8e26c",
-    "storage_bucket": "chathub-project-8e26c.appspot.com"
+    "project_number": "70066664414",
+    "firebase_url": "https://chathub-project-463a2.firebaseio.com",
+    "project_id": "chathub-project-463a2",
+    "storage_bucket": "chathub-project-463a2.appspot.com"
   },
   "client": [
     {
       "client_info": {
-        "mobilesdk_app_id": "1:594555583715:android:123c68aba501e686",
+        "mobilesdk_app_id": "1:70066664414:android:123c68aba501e686",
         "android_client_info": {
           "package_name": "edu.sfsu.csc780.chathub"
         }
       },
       "oauth_client": [
         {
-          "client_id": "594555583715-oik5gdse2rj4e20othlhfj6a1aobbor3.apps.googleusercontent.com",
+          "client_id": "70066664414-p882atd3ev4i97gl8641buu7jlb1df6l.apps.googleusercontent.com",
           "client_type": 1,
           "android_info": {
             "package_name": "edu.sfsu.csc780.chathub",
-            "certificate_hash": "2FC94170D9A7F0E8EC8175A4415C5433E666C109"
+            "certificate_hash": "201920B4CCB535DE941D6E21528C4F04B1F0980D"
           }
         },
         {
-          "client_id": "594555583715-v582r0nqis5odfpo6p0o48a11589aa7p.apps.googleusercontent.com",
+          "client_id": "70066664414-uelcqo7dg6ko7bvoj7h59komm0kraum7.apps.googleusercontent.com",
           "client_type": 3
         }
       ],
       "api_key": [
         {
-          "current_key": "AIzaSyAz6y4WhPEFObA9RfkJ9N9Xs5_7-cRDSVw"
+          "current_key": "AIzaSyBvayenDf1NpbGLchKHmzZcDDQH0oM0leM"
         }
       ],
       "services": {
@@ -40,7 +40,7 @@
           "status": 2,
           "other_platform_oauth_client": [
             {
-              "client_id": "594555583715-v582r0nqis5odfpo6p0o48a11589aa7p.apps.googleusercontent.com",
+              "client_id": "70066664414-uelcqo7dg6ko7bvoj7h59komm0kraum7.apps.googleusercontent.com",
               "client_type": 3
             }
           ]
