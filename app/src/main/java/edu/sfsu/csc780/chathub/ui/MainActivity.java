@@ -29,6 +29,7 @@ import android.hardware.SensorManager;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Environment;
+import android.os.Parcelable;
 import android.preference.PreferenceManager;
 import android.provider.MediaStore;
 import android.speech.RecognizerIntent;
@@ -51,9 +52,7 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
-import android.widget.ArrayAdapter;
 import android.widget.EditText;
-import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.ProgressBar;
@@ -83,10 +82,6 @@ import edu.sfsu.csc780.chathub.R;
 import edu.sfsu.csc780.chathub.model.ChatMessage;
 import edu.sfsu.csc780.chathub.model.User;
 
-import static android.R.attr.data;
-import static android.R.attr.y;
-import static android.R.id.input;
-import static android.provider.AlarmClock.EXTRA_MESSAGE;
 import static android.speech.RecognizerIntent.LANGUAGE_MODEL_FREE_FORM;
 
 public class MainActivity extends AppCompatActivity
@@ -102,6 +97,7 @@ public class MainActivity extends AppCompatActivity
     private static final int REQUEST_PROFILE = 5;
     public static final int MSG_LENGTH_LIMIT = 64;
     private static final double MAX_LINEAR_DIMENSION = 500.0;
+    public static final String EXTRA_USER = "USER";
     public static final String ANONYMOUS = "anonymous";
     private static final int REQUEST_PICK_IMAGE = 1;
     private String mUsername;
@@ -684,18 +680,9 @@ public class MainActivity extends AppCompatActivity
                     filteredText = filteredText.replaceAll("(?i)" + badword, new String(new char[badword.length()]).replace("\0", "*"));
                 }
 
-                System.out.println("BOOMM1233444");
-                System.out.println(mUserModel.getProfileImageUrl());
-                System.out.println("SON999999N");
-
                 ChatMessage chatMessage = new
                         ChatMessage(filteredText,
                         mUserModel);
-
-                System.out.println("999");
-                System.out.println(chatMessage.getUser());
-                System.out.println(chatMessage.getText());
-                System.out.println("kkk");
 
                 MessageUtil.send(chatMessage);
                 mMessageEditText.setText("");
@@ -891,6 +878,7 @@ public class MainActivity extends AppCompatActivity
 
     private void showProfileActivity() {
         Intent intent = new Intent(this, ProfileActivity.class);
+        intent.putExtra(EXTRA_USER, (Parcelable)mUserModel);
         startActivityForResult(intent, REQUEST_PROFILE);
     }
 

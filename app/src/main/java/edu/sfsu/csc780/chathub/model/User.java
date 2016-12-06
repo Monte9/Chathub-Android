@@ -1,12 +1,15 @@
 package edu.sfsu.csc780.chathub.model;
 
+import android.os.Parcel;
+import android.os.Parcelable;
+
 import java.util.Date;
 
 /**
  * Created by montewithpillow on 12/3/16.
  */
 
-public class User {
+public class User implements Parcelable {
     private String name;
     private String email;
     private String profileImageUrl;
@@ -14,6 +17,18 @@ public class User {
     private String phoneNumber;
 
     public User() {
+
+    }
+
+    public User(Parcel in) {
+        String[] data = new String[5];
+
+        in.readStringArray(data);
+        this.name = data[0];
+        this.email = data[1];
+        this.profileImageUrl = data[2];
+        this.nickname = data[3];
+        this.phoneNumber = data[4];
     }
 
     public User(String name, String email, String profileImageUrl, String nickname, String phoneNumber) {
@@ -59,4 +74,29 @@ public class User {
     public void setPhoneNumber(String phoneNumber) {
         this.phoneNumber = phoneNumber;
     }
+
+    @Override
+    public int describeContents() {
+        return 0;
+    }
+
+    @Override
+    public void writeToParcel(Parcel dest, int flags) {
+        dest.writeStringArray(new String[] {this.name,
+                this.email,
+                this.profileImageUrl,
+                this.phoneNumber,
+                this.nickname
+        });
+    }
+
+    public static final Parcelable.Creator CREATOR = new Parcelable.Creator() {
+        public User createFromParcel(Parcel in) {
+            return new User(in);
+        }
+
+        public User[] newArray(int size) {
+            return new User[size];
+        }
+    };
 }
