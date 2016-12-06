@@ -7,6 +7,9 @@
     <string name="preferences_menu_label">Preferences</string>
     <string name="auto_palette_preference">autoPalette</string>
     <string name="color_scheme_preference">colorScheme</string>
+    <string name="edit_profile_title">Edit Profile</string>
+    <string name="nickname_label">Nickname: </string>
+    <string name="profile_pic_label">Profile Picture: </string>
     <string-array name="drawerListItems">
         <item>>Share Image</item>
         <item>Camera</item>

@@ -25,6 +25,8 @@
 
         <activity android:name=".ui.PreferencesActivity" />
 
+        <activity android:name=".ui.EditProfileFragment"/>
+
     </application>
 
 </manifest>

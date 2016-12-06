@@ -27,10 +27,10 @@
         android:id="@+id/rowTextView"
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
-        android:paddingTop="16dp"
+        android:paddingTop="22dp"
         android:paddingRight="16dp"
         android:paddingBottom="16dp"
         android:paddingLeft="0dp"
         android:textSize="16sp"
-        android:textColor="@color/black"/>
+        android:textColor="#FFFFFF"/>
 </LinearLayout>

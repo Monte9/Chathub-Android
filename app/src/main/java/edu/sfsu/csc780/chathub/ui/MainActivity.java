@@ -36,6 +36,7 @@ import android.speech.RecognizerIntent;
 import android.support.annotation.NonNull;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.DialogFragment;
+import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v4.app.LoaderManager;
 import android.support.v4.content.Loader;
@@ -689,8 +690,8 @@ public class MainActivity extends AppCompatActivity
             }
         });
 
-        String[] drawerListItem = {"Share Image", "Camera", "Location", "Microphone", "Profile"};
-        Integer[] drawerImageItem = {R.drawable.ic_image_black_24px, R.drawable.ic_camera_alt_black_24px, R.drawable.ic_my_location_black_24px, R.drawable.ic_keyboard_voice_black_24dp, R.drawable.ic_person_black_24dp};
+        String[] drawerListItem = {"Profile","Share Image", "Camera", "Location", "Microphone"};
+        Integer[] drawerImageItem = {R.drawable.ic_profile_white,R.drawable.ic_image_share_white, R.drawable.ic_camera_white, R.drawable.ic_location_white, R.drawable.ic_microphone_white};
         mDrawerLayout = (DrawerLayout) findViewById(R.id.drawer_layout);
         mDrawerList = (ListView) findViewById(R.id.left_drawer);
 
@@ -709,20 +710,20 @@ public class MainActivity extends AppCompatActivity
 
     private void selectedItem(int position) {
         if (position == 0) {
-            pickImage();
-            mDrawerLayout.closeDrawers();
-        } else if (position == 1) {
-            dispatchTakePhotoIntent();
-            mDrawerLayout.closeDrawers();
-        } else if (position == 2) {
-            loadMap();
-            mDrawerLayout.closeDrawers();
-        } else if (position == 3) {
-            recordAudio();
-            mDrawerLayout.closeDrawers();
-        } else if (position == 4) {
             showProfileActivity();
             System.out.println("Show profile here");
+            mDrawerLayout.closeDrawers();
+        } else if (position == 1) {
+            pickImage();
+            mDrawerLayout.closeDrawers();
+        } else if (position == 2) {
+            dispatchTakePhotoIntent();
+            mDrawerLayout.closeDrawers();
+        } else if (position == 3) {
+            loadMap();
+            mDrawerLayout.closeDrawers();
+        } else if (position == 4) {
+            recordAudio();
             mDrawerLayout.closeDrawers();
         }
     }
@@ -877,7 +878,7 @@ public class MainActivity extends AppCompatActivity
     }
 
     private void showProfileActivity() {
-        Intent intent = new Intent(this, ProfileActivity.class);
+        Intent intent = new Intent(this, EditProfileFragment.class);
         intent.putExtra(EXTRA_USER, (Parcelable)mUserModel);
         startActivityForResult(intent, REQUEST_PROFILE);
     }
