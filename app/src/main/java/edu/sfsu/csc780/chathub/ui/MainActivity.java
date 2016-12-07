@@ -691,7 +691,7 @@ public class MainActivity extends AppCompatActivity
         });
 
         String[] drawerListItem = {"Profile","Share Image", "Camera", "Location", "Microphone", "Preferences", "Log Out"};
-        Integer[] drawerImageItem = {R.drawable.ic_profile_white, R.drawable.ic_image_share_white, R.drawable.ic_camera_white, R.drawable.ic_location_white, R.drawable.ic_microphone_white, R.drawable.ic_image_share_white, R.drawable.ic_profile_white};
+        Integer[] drawerImageItem = {R.drawable.ic_profile_white, R.drawable.ic_image_share_white, R.drawable.ic_camera_white, R.drawable.ic_location_white, R.drawable.ic_microphone_white, R.drawable.ic_preferences_white, R.drawable.ic_logout_white};
         mDrawerLayout = (DrawerLayout) findViewById(R.id.drawer_layout);
         mDrawerList = (ListView) findViewById(R.id.left_drawer);
 

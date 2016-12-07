@@ -29,8 +29,30 @@
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:gravity="center"
+            android:layout_marginTop="-40dp">
+
+            <ImageView
+                android:layout_width="150dp"
+                android:layout_height="150dp"
+                android:id="@+id/current_picture"/>
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:id="@+id/current_name"
+                android:textSize="24sp"
+                android:fontFamily="serif"
+                android:textColor="#FFFFFF"/>
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
             android:orientation="horizontal"
-            android:gravity="center">
+            android:gravity="center"
+            android:layout_marginTop="50dp">
 
             <TextView
                 android:layout_width="wrap_content"
@@ -59,7 +81,7 @@
             android:layout_height="wrap_content"
             android:orientation="horizontal"
             android:gravity="center"
-            android:layout_marginTop="50dp">
+            android:layout_marginTop="10dp">
 
             <TextView
                 android:layout_width="wrap_content"
@@ -73,6 +95,7 @@
                 style="@style/Base.Widget.AppCompat.Button"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:id="@+id/upload_image"
                 android:text="Upload Image"
                 android:textColor="#BDBDBD"
                 android:background="#3F51B5"
@@ -88,12 +111,13 @@
         android:orientation="horizontal"
         android:gravity="center"
         android:layout_alignParentBottom="true"
-        android:layout_marginBottom="50dp">
+        android:layout_marginBottom="30dp">
 
         <Button
             style="@style/Base.Widget.AppCompat.Button"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:id="@+id/cancel_button"
             android:text="Cancel"
             android:textColor="#3F51B5"
             android:background="#FFFFFF"
@@ -104,6 +128,7 @@
             style="@style/Base.Widget.AppCompat.Button"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:id="@+id/save_button"
             android:text="Save"
             android:textColor="#3F51B5"
             android:background="#FFFFFF"
