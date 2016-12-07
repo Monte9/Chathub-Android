@@ -35,16 +35,22 @@ import java.util.Calendar;
 import de.hdodenhof.circleimageview.CircleImageView;
 import edu.sfsu.csc780.chathub.model.ChatMessage;
 import edu.sfsu.csc780.chathub.R;
+import edu.sfsu.csc780.chathub.model.User;
 
 public class MessageUtil {
     private static final String LOG_TAG = MessageUtil.class.getSimpleName();
     public static final String MESSAGES_CHILD = "messages";
+    public static final String USER = "user";
     private static DatabaseReference sFirebaseDatabaseReference =
             FirebaseDatabase.getInstance().getReference();
     private static FirebaseStorage sStorage = FirebaseStorage.getInstance();
     private static MessageLoadListener sAdapterListener;
     private static FirebaseAuth sFirebaseAuth;
     public interface MessageLoadListener { public void onLoadComplete(); }
+
+    public static void saveUser(User user) {
+        sFirebaseDatabaseReference.child(USER).push().setValue(user);
+    }
 
     public static void send(ChatMessage chatMessage) {
         sFirebaseDatabaseReference.child(MESSAGES_CHILD).push().setValue(chatMessage);
@@ -184,6 +190,14 @@ public class MessageUtil {
         long nowMs = Calendar.getInstance().getTimeInMillis();
 
         return sStorage.getReference().child(user.getUid() + "/" + nowMs + "/" + uri
+                .getLastPathSegment());
+    }
+
+    public static StorageReference getProfileImageStorageReference(Uri uri) {
+        //Create a blob storage reference with path : bucket/userId/timeMs/filename
+        long nowMs = Calendar.getInstance().getTimeInMillis();
+
+        return sStorage.getReference().child(nowMs + "/" + uri
                 .getLastPathSegment());
     }
 

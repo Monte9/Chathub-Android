@@ -75,6 +75,7 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.Serializable;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
@@ -99,6 +100,7 @@ public class MainActivity extends AppCompatActivity
     public static final int MSG_LENGTH_LIMIT = 64;
     private static final double MAX_LINEAR_DIMENSION = 500.0;
     public static final String EXTRA_USER = "USER";
+    public static final String EXTRA_FIREBASE_USER = "FIREBASE_USER";
     public static final String ANONYMOUS = "anonymous";
     private static final int REQUEST_PICK_IMAGE = 1;
     private String mUsername;
@@ -711,7 +713,6 @@ public class MainActivity extends AppCompatActivity
     private void selectedItem(int position) {
         if (position == 0) {
             showProfileActivity();
-            System.out.println("Show profile here");
             mDrawerLayout.closeDrawers();
         } else if (position == 1) {
             pickImage();
