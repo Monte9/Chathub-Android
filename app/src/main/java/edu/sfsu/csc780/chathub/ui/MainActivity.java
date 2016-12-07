@@ -185,6 +185,8 @@ public class MainActivity extends AppCompatActivity
 
             //CALL TO LOAD USERS FROM FIREBASE
             getUsers();
+
+            mUserModel = new User(mUser.getDisplayName(), mUser.getEmail(), mUser.getPhotoUrl().toString(), mUser.getDisplayName());
         }
 
         mGoogleApiClient = new GoogleApiClient.Builder(this)
@@ -277,8 +279,6 @@ public class MainActivity extends AppCompatActivity
     }
 
     public void getUsers() {
-
-
         // Attach a listener to read the data at our posts reference
         sFirebaseDatabaseReference.child(USERS).addValueEventListener(new ValueEventListener() {
             @Override

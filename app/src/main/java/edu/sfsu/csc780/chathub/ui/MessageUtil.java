@@ -106,7 +106,11 @@ public class MessageUtil {
                                               ChatMessage chatMessage, int position) {
                 sAdapterListener.onLoadComplete();
                 viewHolder.messageTextView.setText(chatMessage.getText());
-                viewHolder.messengerTextView.setText(chatMessage.getUser().getNickname());
+                if(chatMessage.getUser().getNickname() == null) {
+                    viewHolder.messengerTextView.setText(chatMessage.getUser().getName());
+                } else {
+                    viewHolder.messengerTextView.setText(chatMessage.getUser().getNickname());
+                }
 
                 System.out.println(chatMessage.getUser().getProfileImageUrl());
 
@@ -117,24 +121,30 @@ public class MessageUtil {
                                     .getDrawable(activity,
                                             R.drawable.ic_account_circle_black_36dp));
                 } else {
-                    try {
-                        final StorageReference gsReference =
-                                sStorage.getReferenceFromUrl(chatMessage.getUser().getProfileImageUrl());
-                        gsReference.getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {
-                            @Override
-                            public void onSuccess(Uri uri) {
-                                Glide.with(activity)
-                                        .load(uri)
-                                        .into(viewHolder.messengerImageView);
-                            }
-                        }).addOnFailureListener(new OnFailureListener() {
-                            @Override
-                            public void onFailure(@NonNull Exception exception) {
-                                System.out.println("Yo it failed");
-                            }
-                        });
-                    } catch (IllegalArgumentException e) {
-                        System.out.println("FAILLLLL!!");
+                    if (chatMessage.getUser().getProfileImageUrl().substring(0,4).equals("http")) {
+                        Glide.with(activity)
+                                .load(chatMessage.getUser().getProfileImageUrl())
+                                .into(viewHolder.messengerImageView);
+                    } else {
+                        try {
+                            final StorageReference gsReference =
+                                    sStorage.getReferenceFromUrl(chatMessage.getUser().getProfileImageUrl());
+                            gsReference.getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {
+                                @Override
+                                public void onSuccess(Uri uri) {
+                                    Glide.with(activity)
+                                            .load(uri)
+                                            .into(viewHolder.messengerImageView);
+                                }
+                            }).addOnFailureListener(new OnFailureListener() {
+                                @Override
+                                public void onFailure(@NonNull Exception exception) {
+                                    System.out.println("Yo it failed");
+                                }
+                            });
+                        } catch (IllegalArgumentException e) {
+                            System.out.println("FAILLLLL!!");
+                        }
                     }
 
                     final SimpleTarget target = new SimpleTarget<Bitmap>() {
