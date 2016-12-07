@@ -185,16 +185,6 @@ public class MainActivity extends AppCompatActivity
 
             //CALL TO LOAD USERS FROM FIREBASE
             getUsers();
-
-            if (mUser.getPhotoUrl() != null) {
-                mPhotoUrl = mUser.getPhotoUrl().toString();
-            } else {
-                mPhotoUrl = "";
-            }
-
-            mUserModel = new
-                    User(mUser.getDisplayName(), mUser.getEmail(), mPhotoUrl, "default_nickname");
-
         }
 
         mGoogleApiClient = new GoogleApiClient.Builder(this)
@@ -287,6 +277,8 @@ public class MainActivity extends AppCompatActivity
     }
 
     public void getUsers() {
+
+
         // Attach a listener to read the data at our posts reference
         sFirebaseDatabaseReference.child(USERS).addValueEventListener(new ValueEventListener() {
             @Override
@@ -294,11 +286,12 @@ public class MainActivity extends AppCompatActivity
                 if(dataSnapshot.exists()) {
                 HashMap users = (HashMap) dataSnapshot.getValue();
                     Iterator it = users.entrySet().iterator();
+                    firebaseUsers.clear();
                     while (it.hasNext()) {
                         Map.Entry userObject = (Map.Entry) it.next();
 
-                    System.out.println("showing each user below");
-                    System.out.println(userObject.getValue());
+//                    System.out.println("showing each user below");
+//                    System.out.println(userObject.getValue());
 
                         HashMap user = (HashMap) userObject.getValue();
                         firebaseUsers.add(user);
@@ -316,7 +309,20 @@ public class MainActivity extends AppCompatActivity
     }
     @Subscribe
     public void getUser(ArrayList users){
-        //System.out.println(users);
+        System.out.println("all users below: ");
+        System.out.println(users);
+        System.out.println();
+
+        for(Object userObject: firebaseUsers) {
+            HashMap user = (HashMap) userObject;
+
+            if(user.get("email").equals(mUser.getEmail())) {
+                System.out.println("Found email");
+                mUserModel = new User(user.get("name").toString(), user.get("email").toString(), user.get("profileImageUrl").toString(), user.get("nickname").toString());
+                break;
+            }
+        }
+        firebaseUsers.clear();
     }
 
     private void selectedItem(int position) {
@@ -397,20 +403,11 @@ public class MainActivity extends AppCompatActivity
     @Override
     public void onStart() {
         super.onStart();
-        System.out.println("all users below: ");
-        System.out.println(firebaseUsers);
-        System.out.println();
+        bus = new Bus(ThreadEnforcer.MAIN);
+        bus.register(this);
 
-        Collections.reverse(firebaseUsers);
-
-        for(Object userObject: firebaseUsers) {
-            HashMap user = (HashMap) userObject;
-
-            if(user.get("email").equals(mUser.getEmail())) {
-                System.out.println("BOOMMMM called......");
-                mUserModel = new User(user.get("name").toString(), user.get("email").toString(), user.get("profileImageUrl").toString(), user.get("nickname").toString());
-            }
-        }
+        //CALL TO LOAD USERS FROM FIREBASE
+        getUsers();
     }
 
     @Override
