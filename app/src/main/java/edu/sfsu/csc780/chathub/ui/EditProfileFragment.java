@@ -71,24 +71,31 @@ public class EditProfileFragment extends Activity {
         currentName.setText(user.getNickname());
 
         currentPicture = (ImageView) findViewById(R.id.current_picture);
-        try {
-            final StorageReference gsReference =
-                    sStorage.getReferenceFromUrl(user.getProfileImageUrl());
-            gsReference.getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {
-                @Override
-                public void onSuccess(Uri uri) {
-                    Glide.with(EditProfileFragment.this)
-                            .load(uri)
-                            .into(currentPicture);
-                }
-            }).addOnFailureListener(new OnFailureListener() {
-                @Override
-                public void onFailure(@NonNull Exception exception) {
-                    System.out.println("Yo it failed");
-                }
-            });
-        } catch (IllegalArgumentException e) {
-            System.out.println("FAILLLLL!!");
+        System.out.println(user.getProfileImageUrl().substring(0,4));
+        if (user.getProfileImageUrl().substring(0,4).equals("http")) {
+            Glide.with(EditProfileFragment.this)
+                    .load(user.getProfileImageUrl())
+                    .into(currentPicture);
+        } else {
+            try {
+                final StorageReference gsReference =
+                        sStorage.getReferenceFromUrl(user.getProfileImageUrl());
+                gsReference.getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {
+                    @Override
+                    public void onSuccess(Uri uri) {
+                        Glide.with(EditProfileFragment.this)
+                                .load(uri)
+                                .into(currentPicture);
+                    }
+                }).addOnFailureListener(new OnFailureListener() {
+                    @Override
+                    public void onFailure(@NonNull Exception exception) {
+                        System.out.println("Yo it failed");
+                    }
+                });
+            } catch (IllegalArgumentException e) {
+                System.out.println("FAILLLLL!!");
+            }
         }
 
         updatedPhotoURI = user.getProfileImageUrl();

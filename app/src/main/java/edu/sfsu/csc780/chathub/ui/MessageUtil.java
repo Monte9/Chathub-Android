@@ -45,6 +45,7 @@ import edu.sfsu.csc780.chathub.R;
 import edu.sfsu.csc780.chathub.model.User;
 
 import static android.R.attr.name;
+import static edu.sfsu.csc780.chathub.R.id.messengerImageView;
 
 public class MessageUtil {
     private static final String LOG_TAG = MessageUtil.class.getSimpleName();
@@ -106,13 +107,37 @@ public class MessageUtil {
                 sAdapterListener.onLoadComplete();
                 viewHolder.messageTextView.setText(chatMessage.getText());
                 viewHolder.messengerTextView.setText(chatMessage.getUser().getNickname());
+
+                System.out.println(chatMessage.getUser().getProfileImageUrl());
+
                 if (chatMessage.getUser().getProfileImageUrl() == null) {
+                    System.out.println("Yoooo");
                     viewHolder.messengerImageView
                             .setImageDrawable(ContextCompat
                                     .getDrawable(activity,
                                             R.drawable.ic_account_circle_black_36dp));
                 } else {
-                    SimpleTarget target = new SimpleTarget<Bitmap>() {
+                    try {
+                        final StorageReference gsReference =
+                                sStorage.getReferenceFromUrl(chatMessage.getUser().getProfileImageUrl());
+                        gsReference.getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {
+                            @Override
+                            public void onSuccess(Uri uri) {
+                                Glide.with(activity)
+                                        .load(uri)
+                                        .into(viewHolder.messengerImageView);
+                            }
+                        }).addOnFailureListener(new OnFailureListener() {
+                            @Override
+                            public void onFailure(@NonNull Exception exception) {
+                                System.out.println("Yo it failed");
+                            }
+                        });
+                    } catch (IllegalArgumentException e) {
+                        System.out.println("FAILLLLL!!");
+                    }
+
+                    final SimpleTarget target = new SimpleTarget<Bitmap>() {
                         @Override
                         public void onResourceReady(Bitmap bitmap, GlideAnimation glideAnimation) {
                             viewHolder.messengerImageView.setImageBitmap(bitmap);
@@ -130,10 +155,6 @@ public class MessageUtil {
 
                         }
                     };
-                    Glide.with(activity)
-                            .load(chatMessage.getUser().getProfileImageUrl())
-                            .asBitmap()
-                            .into(target);
                 }
 
                 if (chatMessage.getImageUrl() != null) {
