@@ -25,22 +25,31 @@ import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 
+import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.HashMap;
+import java.util.Iterator;
+import java.util.Map;
 
 import de.hdodenhof.circleimageview.CircleImageView;
 import edu.sfsu.csc780.chathub.model.ChatMessage;
 import edu.sfsu.csc780.chathub.R;
 import edu.sfsu.csc780.chathub.model.User;
 
+import static android.R.attr.name;
+
 public class MessageUtil {
     private static final String LOG_TAG = MessageUtil.class.getSimpleName();
     public static final String MESSAGES_CHILD = "messages";
-    public static final String USER = "user";
+    public static final String USERS = "users";
     private static DatabaseReference sFirebaseDatabaseReference =
             FirebaseDatabase.getInstance().getReference();
     private static FirebaseStorage sStorage = FirebaseStorage.getInstance();
@@ -49,7 +58,7 @@ public class MessageUtil {
     public interface MessageLoadListener { public void onLoadComplete(); }
 
     public static void saveUser(User user) {
-        sFirebaseDatabaseReference.child(USER).push().setValue(user);
+        sFirebaseDatabaseReference.child(USERS).push().setValue(user);
     }
 
     public static void send(ChatMessage chatMessage) {

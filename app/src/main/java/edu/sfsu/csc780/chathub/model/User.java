@@ -14,29 +14,26 @@ public class User implements Parcelable {
     private String email;
     private String profileImageUrl;
     private String nickname;
-    private String phoneNumber;
 
     public User() {
 
     }
 
     public User(Parcel in) {
-        String[] data = new String[5];
+        String[] data = new String[4];
 
         in.readStringArray(data);
         this.name = data[0];
         this.email = data[1];
         this.profileImageUrl = data[2];
         this.nickname = data[3];
-        this.phoneNumber = data[4];
     }
 
-    public User(String name, String email, String profileImageUrl, String nickname, String phoneNumber) {
+    public User(String name, String email, String profileImageUrl, String nickname) {
         this.name = name;
         this.email = email;
         this.profileImageUrl = profileImageUrl;
         this.nickname = nickname;
-        this.phoneNumber = phoneNumber;
     }
 
     public String getName() {
@@ -67,14 +64,6 @@ public class User implements Parcelable {
         this.nickname = nickname;
     }
 
-    public String getPhoneNumber() {
-        return phoneNumber;
-    }
-
-    public void setPhoneNumber(String phoneNumber) {
-        this.phoneNumber = phoneNumber;
-    }
-
     @Override
     public int describeContents() {
         return 0;
@@ -85,7 +74,6 @@ public class User implements Parcelable {
         dest.writeStringArray(new String[] {this.name,
                 this.email,
                 this.profileImageUrl,
-                this.phoneNumber,
                 this.nickname
         });
     }

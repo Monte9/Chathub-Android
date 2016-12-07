@@ -68,8 +68,16 @@ import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
 import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
+import com.squareup.otto.Bus;
+import com.squareup.otto.Subscribe;
+import com.squareup.otto.ThreadEnforcer;
 
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -78,7 +86,11 @@ import java.io.IOException;
 import java.io.Serializable;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.Date;
+import java.util.HashMap;
+import java.util.Iterator;
+import java.util.Map;
 
 import edu.sfsu.csc780.chathub.R;
 import edu.sfsu.csc780.chathub.model.BadWords;
@@ -87,10 +99,15 @@ import edu.sfsu.csc780.chathub.model.User;
 import edu.sfsu.csc780.chathub.model.BadWords;
 
 import static android.speech.RecognizerIntent.LANGUAGE_MODEL_FREE_FORM;
+import static edu.sfsu.csc780.chathub.ui.MessageUtil.USERS;
 
 public class MainActivity extends AppCompatActivity
         implements GoogleApiClient.OnConnectionFailedListener,
         MessageUtil.MessageLoadListener, SensorEventListener {
+    public static Bus bus;
+
+    private static DatabaseReference sFirebaseDatabaseReference =
+            FirebaseDatabase.getInstance().getReference();
 
     private static final String TAG = "MainActivity";
     public static final String MESSAGES_CHILD = "messages";
@@ -128,6 +145,8 @@ public class MainActivity extends AppCompatActivity
 
     private int mSavedTheme;
 
+    static final ArrayList firebaseUsers = new ArrayList<String>();
+
     private DrawerLayout mDrawerLayout;
     private ListView mDrawerList;
     private BadWords badWords;
@@ -160,6 +179,13 @@ public class MainActivity extends AppCompatActivity
             finish();
             return;
         } else {
+
+            bus = new Bus(ThreadEnforcer.MAIN);
+            bus.register(this);
+
+            //CALL TO LOAD USERS FROM FIREBASE
+            getUsers();
+
             if (mUser.getPhotoUrl() != null) {
                 mPhotoUrl = mUser.getPhotoUrl().toString();
             } else {
@@ -167,11 +193,8 @@ public class MainActivity extends AppCompatActivity
             }
 
             mUserModel = new
-                    User(mUser.getDisplayName(), mUser.getEmail(), mPhotoUrl, "default_nickname", "default_phone");
+                    User(mUser.getDisplayName(), mUser.getEmail(), mPhotoUrl, "default_nickname");
 
-            System.out.println("BOOMM");
-            System.out.println(mUserModel.getEmail());
-            System.out.println("SONN");
         }
 
         mGoogleApiClient = new GoogleApiClient.Builder(this)
@@ -263,6 +286,39 @@ public class MainActivity extends AppCompatActivity
         });
     }
 
+    public void getUsers() {
+        // Attach a listener to read the data at our posts reference
+        sFirebaseDatabaseReference.child(USERS).addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                if(dataSnapshot.exists()) {
+                HashMap users = (HashMap) dataSnapshot.getValue();
+                    Iterator it = users.entrySet().iterator();
+                    while (it.hasNext()) {
+                        Map.Entry userObject = (Map.Entry) it.next();
+
+                    System.out.println("showing each user below");
+                    System.out.println(userObject.getValue());
+
+                        HashMap user = (HashMap) userObject.getValue();
+                        firebaseUsers.add(user);
+                        it.remove(); // avoids a ConcurrentModificationException
+                    }
+                    bus.post(firebaseUsers);
+                }
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+                System.out.println("The read failed: " + databaseError.getCode());
+            }
+        });
+    }
+    @Subscribe
+    public void getUser(ArrayList users){
+        //System.out.println(users);
+    }
+
     private void selectedItem(int position) {
         if (position == 0) {
             showProfileActivity();
@@ -341,8 +397,20 @@ public class MainActivity extends AppCompatActivity
     @Override
     public void onStart() {
         super.onStart();
-        // Check if user is signed in.
-        // TODO: Add code to check if user is signed in.
+        System.out.println("all users below: ");
+        System.out.println(firebaseUsers);
+        System.out.println();
+
+        Collections.reverse(firebaseUsers);
+
+        for(Object userObject: firebaseUsers) {
+            HashMap user = (HashMap) userObject;
+
+            if(user.get("email").equals(mUser.getEmail())) {
+                System.out.println("BOOMMMM called......");
+                mUserModel = new User(user.get("name").toString(), user.get("email").toString(), user.get("profileImageUrl").toString(), user.get("nickname").toString());
+            }
+        }
     }
 
     @Override
@@ -414,6 +482,8 @@ public class MainActivity extends AppCompatActivity
 
     private void showProfileActivity() {
         Intent intent = new Intent(this, EditProfileFragment.class);
+        System.out.println("WHAT??");
+        System.out.println(mUserModel.getNickname());
         intent.putExtra(EXTRA_USER, (Parcelable)mUserModel);
         startActivityForResult(intent, REQUEST_PROFILE);
     }

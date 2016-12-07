@@ -20,6 +20,7 @@ import com.bumptech.glide.Glide;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
 
@@ -37,6 +38,7 @@ import static edu.sfsu.csc780.chathub.ui.MainActivity.EXTRA_FIREBASE_USER;
  */
 public class EditProfileFragment extends Activity {
 
+    private static FirebaseStorage sStorage = FirebaseStorage.getInstance();
     private static final int REQUEST_PICK_IMAGE = 1;
 
     private TextView currentName;
@@ -60,14 +62,34 @@ public class EditProfileFragment extends Activity {
         Intent intent = getIntent();
         final User user = (User) intent.getParcelableExtra(MainActivity.EXTRA_USER);
 
+        System.out.println(user.getName());
+        System.out.println(user.getEmail());
+        System.out.println(user.getNickname());
+        System.out.println(user.getProfileImageUrl());
+
         currentName = (TextView) findViewById(R.id.current_name);
-        currentName.setText(user.getName());
+        currentName.setText(user.getNickname());
 
         currentPicture = (ImageView) findViewById(R.id.current_picture);
-        Glide.with(this)
-                .load(user.getProfileImageUrl())
-                .asBitmap()
-                .into(currentPicture);
+        try {
+            final StorageReference gsReference =
+                    sStorage.getReferenceFromUrl(user.getProfileImageUrl());
+            gsReference.getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {
+                @Override
+                public void onSuccess(Uri uri) {
+                    Glide.with(EditProfileFragment.this)
+                            .load(uri)
+                            .into(currentPicture);
+                }
+            }).addOnFailureListener(new OnFailureListener() {
+                @Override
+                public void onFailure(@NonNull Exception exception) {
+                    System.out.println("Yo it failed");
+                }
+            });
+        } catch (IllegalArgumentException e) {
+            System.out.println("FAILLLLL!!");
+        }
 
         updatedPhotoURI = user.getProfileImageUrl();
 
@@ -105,7 +127,7 @@ public class EditProfileFragment extends Activity {
             @Override
             public void onClick(View view) {
                 Intent intent = new Intent(view.getContext(),MainActivity.class);
-                User updatedUser = new User(user.getName(), user.getEmail(), updatedPhotoURI, nickname.getText().toString(), user.getPhoneNumber());
+                User updatedUser = new User(user.getName(), user.getEmail(), updatedPhotoURI, nickname.getText().toString());
                 MessageUtil.saveUser(updatedUser);
                 startActivity(intent);
             }
