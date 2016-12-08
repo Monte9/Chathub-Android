@@ -112,10 +112,7 @@ public class MessageUtil {
                     viewHolder.messengerTextView.setText(chatMessage.getUser().getNickname());
                 }
 
-                System.out.println(chatMessage.getUser().getProfileImageUrl());
-
                 if (chatMessage.getUser().getProfileImageUrl() == null) {
-                    System.out.println("Yoooo");
                     viewHolder.messengerImageView
                             .setImageDrawable(ContextCompat
                                     .getDrawable(activity,
@@ -139,11 +136,9 @@ public class MessageUtil {
                             }).addOnFailureListener(new OnFailureListener() {
                                 @Override
                                 public void onFailure(@NonNull Exception exception) {
-                                    System.out.println("Yo it failed");
                                 }
                             });
                         } catch (IllegalArgumentException e) {
-                            System.out.println("FAILLLLL!!");
                         }
                     }
 
