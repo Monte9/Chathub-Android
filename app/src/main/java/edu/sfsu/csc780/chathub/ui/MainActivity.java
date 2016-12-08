@@ -290,9 +290,6 @@ public class MainActivity extends AppCompatActivity
                     while (it.hasNext()) {
                         Map.Entry userObject = (Map.Entry) it.next();
 
-//                    System.out.println("showing each user below");
-//                    System.out.println(userObject.getValue());
-
                         HashMap user = (HashMap) userObject.getValue();
                         firebaseUsers.add(user);
                         it.remove(); // avoids a ConcurrentModificationException
@@ -303,21 +300,15 @@ public class MainActivity extends AppCompatActivity
 
             @Override
             public void onCancelled(DatabaseError databaseError) {
-                System.out.println("The read failed: " + databaseError.getCode());
             }
         });
     }
     @Subscribe
     public void getUser(ArrayList users){
-        System.out.println("all users below: ");
-        System.out.println(users);
-        System.out.println();
-
         for(Object userObject: firebaseUsers) {
             HashMap user = (HashMap) userObject;
 
             if(user.get("email").equals(mUser.getEmail())) {
-                System.out.println("Found email");
                 mUserModel = new User(user.get("name").toString(), user.get("email").toString(), user.get("profileImageUrl").toString(), user.get("nickname").toString());
                 break;
             }
@@ -479,8 +470,6 @@ public class MainActivity extends AppCompatActivity
 
     private void showProfileActivity() {
         Intent intent = new Intent(this, EditProfileFragment.class);
-        System.out.println("WHAT??");
-        System.out.println(mUserModel.getNickname());
         intent.putExtra(EXTRA_USER, (Parcelable)mUserModel);
         startActivityForResult(intent, REQUEST_PROFILE);
     }
